@@ -1,0 +1,5 @@
+*.obj
+*.exe
+*.map
+*.brk
+*.com
