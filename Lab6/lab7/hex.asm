@@ -1,0 +1,80 @@
+PUBLIC UHex
+PUBLIC SHex
+
+DSEG	SEGMENT PARA PUBLIC 'DATA'
+	NEWLINE	DB	10, 13, '$'
+        SYMBOLS DB '0123456789ABCDEF'
+DSEG	ENDS
+
+CSEG	SEGMENT PARA PUBLIC 'CODE'
+	ASSUME CS:CSEG
+		
+UHex	PROC NEAR
+PUSH BP
+        PUSH SI
+		MOV  BP, SP
+
+        MOV DX, [BP + 8] 
+		MOV SI, 16
+		MOV CX, 4
+
+LOOP_H:
+		MOV BL, 4
+
+		XCHG CL, BL 
+		ROL DX, CL 
+		XCHG CL, BL  
+
+		MOV AL, 0Fh ; AL = 15
+		AND AL, DL ; MASK FIRST DIGIT WITH 15
+            
+        MOV BX, OFFSET SYMBOLS  
+        XLAT
+		
+		MOV CH, AL
+        XCHG  DL, CH
+		MOV AH, 2 ; PRINT DL, SO WE ACTUALLY PRINT AL
+		INT 21h
+		XCHG  DL, CH
+		
+		XOR CH, CH ; CLEAR CH
+		LOOP LOOP_H
+
+; PRINT NEWLINE
+		MOV AH, 9 
+		MOV DX, OFFSET NEWLINE
+		INT 21H
+		
+		POP SI
+		POP BP
+		RET 4
+UHex	ENDP
+		
+SHex	PROC NEAR
+	PUSH BP
+	MOV  BP, SP
+		
+	MOV  CX, [BP + 4]
+	MOV  BX, [BP + 6]
+		
+	CMP  CL, 0
+	JE   SH_SKIP_NEG
+		
+	MOV  AH, 2
+	MOV  DL, '-'
+	INT  21H
+		
+	NEG  BX
+		
+SH_SKIP_NEG:
+	PUSH  BX
+	PUSH  CX
+		
+	CALL  UHex
+		
+	POP BP
+	RET 4 ; delete x, si
+SHex	ENDP
+		
+CSEG	ENDS
+END
