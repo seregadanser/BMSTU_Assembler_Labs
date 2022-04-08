@@ -1,7 +1,8 @@
 PUBLIC str_to_2num 
+PUBLIC output_dou 
 
-EXTRN buff: byte
-EXTRN dou: word
+EXTRN dou: byte
+EXTRN hexi: word
 
 
 TmpSeg SEGMENT PARA 'DATA'
@@ -21,8 +22,27 @@ output_symb proc
 output_symb endp
     
 
-output_dou proc 
- 
+output_dou proc near
+    push ds
+    push bx 
+    push es 
+    
+    mov cx, 15
+    mov ah, 02h
+
+    shl bx, 1
+
+    output_digits_loop:
+        mov dl, 0
+        shl bx, 1
+        adc dl, 30h
+        int 21h
+    loop output_digits_loop
+
+    pop es 
+    pop bx 
+    pop ds 
+    ret
 output_dou endp
 
 str_to_2num proc near
@@ -32,22 +52,45 @@ str_to_2num proc near
     push di
     push ds
 
-    assume DS:SEG buff
-    mov ax, SEG buff
+    assume DS:SEG hexi
+    mov ax, SEG hexi
     mov ds, ax
 
-    
+    mov ax, hexi
+    mov si, 0
 
-    mov hexi, di
-    call output_hex
+    mov bx, ax
+    shl bx, 1
+    shr bx, 1
+ 
+    cmp bx, ax 
+    je plus_sign
 
-    pop ds
-    pop di
-    pop si
-    pop ax
-    pop bx
+    neg_sign:
+        mov dl, '-'
+    	mov ah, 02h
+    	int 21h 
+        mov bx, hexi
+        sub bx, 1
+        not bx
+        ;neg bx
+        call output_dou
+        jmp ret_bl
 
-    ret
+    plus_sign:
+        mov dl, '+'
+    	mov ah, 02h
+    	int 21h 
+        mov bx, hexi
+        call output_dou
+
+    ret_bl:
+        pop ds
+        pop di
+        pop si
+        pop ax
+        pop bx
+        ret
 str_to_2num endp
 
 Code ENDS

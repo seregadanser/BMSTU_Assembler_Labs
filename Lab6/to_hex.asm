@@ -1,4 +1,5 @@
 PUBLIC str_to_16num 
+PUBLIC output_hex
 
 EXTRN buff: byte
 EXTRN hexi: word
@@ -21,19 +22,27 @@ output_symb proc
 output_symb endp
     
 
-output_hex proc 
+output_hex proc near
+
+    push ds 
+    push es 
+    push bx
 
     assume ES:TmpSeg
     mov ax, TmpSeg
     mov es, ax
     mov bx, offset htable
 
+    assume DS:SEG hexi
+    mov ax, SEG hexi
+    mov ds, ax
+
 
     mov ax, hexi
     mov cl, 4    ; в СХ количество введенных символов
    ; mov cx, 
     push ax
-    ll:
+    ls:
         pop ax
         rol ax, 1
         rol ax, 1
@@ -56,7 +65,7 @@ output_hex proc
         ;jne continue
         call output_symb
         
-    loop ll
+    loop ls
 
   ;  continue:
   ;      add dl, 30h
@@ -84,6 +93,10 @@ output_hex proc
 
     out_e:
         pop ax
+
+        pop bx
+        pop es 
+        pop ds 
         ret
 output_hex endp
 
@@ -119,8 +132,6 @@ str_to_16num proc near
         mul dx; увеличиваем его в 10 раз
         mov si, ax; помещаем обратно в SI
     loop m1; переходим к следующему символу
-
-    call output_hex
 
     pop ds
     pop di
