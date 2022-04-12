@@ -51,7 +51,6 @@ str_to_2num proc near
     push si
     push di
     push ds
-
     assume DS:SEG hexi
     mov ax, SEG hexi
     mov ds, ax
@@ -74,6 +73,7 @@ str_to_2num proc near
         sub bx, 1
         not bx
         ;neg bx
+        
         call output_dou
         jmp ret_bl
 
