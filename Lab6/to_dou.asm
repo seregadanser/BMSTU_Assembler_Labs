@@ -30,7 +30,24 @@ output_dou proc near
     mov cx, 15
     mov ah, 02h
 
+    ;shl bx, 1
+    mov ax, bx
     shl bx, 1
+    shr bx, 1
+ 
+    cmp bx, ax 
+    push ax
+    je plus_sign_o
+    mov ah, 02h
+    mov dl, 31h
+    int 21h
+    
+
+plus_sign_o:
+    pop ax
+    mov bx, ax
+    shl bx, 1
+    mov ah, 02h
 
     output_digits_loop:
         mov dl, 0
