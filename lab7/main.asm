@@ -7,13 +7,15 @@ Code SEGMENT PARA PUBLIC 'CODE'
     local_factor db ?;задержка
 
     Input PROC far
-
         push ax
         push bx
         push cx
         push dx
         push es
         push di
+
+       pushf
+       call cs:old_int_handler;вызов старого обработчика
 
         mov bl, cs:local_counter
         cmp bl, cs:local_factor
