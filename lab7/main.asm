@@ -4,7 +4,7 @@ Code SEGMENT PARA PUBLIC 'CODE'
     ;jmp init
     old_int_handler dd 0
     local_counter db 0
-    local_factor db 0;задержка
+    local_factor db ?;задержка
 
     Input PROC far
 
