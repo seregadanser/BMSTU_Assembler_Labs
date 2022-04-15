@@ -5,6 +5,7 @@ Code SEGMENT PARA PUBLIC 'CODE'
     old_int_handler dd 0
     local_counter db 0
     local_factor db ?;задержка
+    speed db ?  
 
     Input PROC far
         push ax
@@ -14,8 +15,8 @@ Code SEGMENT PARA PUBLIC 'CODE'
         push es
         push di
 
-       pushf
-       call cs:old_int_handler;вызов старого обработчика
+        pushf
+        call cs:old_int_handler;вызов старого обработчика
 
         mov bl, cs:local_counter
         cmp bl, cs:local_factor
@@ -28,8 +29,20 @@ Code SEGMENT PARA PUBLIC 'CODE'
             mov dl, 32h
             mov ah, 2
             int 21h
-            ;END CODE;
-        jmp exit
+            ;обновляем скорость;
+            mov al, 0f3h
+            out 60h, al
+            mov al, cs:speed
+            out 60h, al
+
+            ;меняем скорость;
+            dec cs:speed
+            test cs:speed, 0fh ; 0000 1111 - маска для скорости
+            jz reset
+            jmp exit
+            reset:
+                mov cs:speed, 00h
+            jmp exit
 
         exit1:
         inc bl
@@ -49,6 +62,13 @@ Code SEGMENT PARA PUBLIC 'CODE'
     init:
         cli
         mov byte ptr local_factor, 17
+        mov byte ptr speed, 00h
+
+        mov al, 0f3h
+        out 60h, al
+        mov al, cs:speed    
+        out 60h, al
+
         mov ax,351ch
         int 21h
         mov word ptr old_int_handler, bx
