@@ -26,9 +26,9 @@ Code SEGMENT PARA PUBLIC 'CODE'
         mov byte ptr cs:local_counter,0
 
             ;CODE;
-            mov dl, 32h
-            mov ah, 2
-            int 21h
+            ;mov dl, 32h
+            ;mov ah, 2
+            ;int 21h
             ;обновляем скорость;
             mov al, 0f3h
             out 60h, al
@@ -37,11 +37,11 @@ Code SEGMENT PARA PUBLIC 'CODE'
 
             ;меняем скорость;
             dec cs:speed
-            test cs:speed, 0fh ; 0000 1111 - маска для скорости
-            jz reset
+            test cs:speed, 00000000b
+            jnz reset
             jmp exit
             reset:
-                mov cs:speed, 00h
+                or cs:speed, 00001111b
             jmp exit
 
         exit1:
@@ -62,12 +62,16 @@ Code SEGMENT PARA PUBLIC 'CODE'
     init:
         cli
         mov byte ptr local_factor, 17
-        mov byte ptr speed, 00h
+        mov byte ptr speed, 1fh
 
         mov al, 0f3h
         out 60h, al
-        mov al, cs:speed    
+        in al, 60h
+        mov cs:speed, al
+        or cs:speed, 00001111b
+        mov al, cs:speed
         out 60h, al
+        
 
         mov ax,351ch
         int 21h
