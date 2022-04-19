@@ -25,9 +25,9 @@ int str_len(const char* str)
 int main()
 {
 	char a[100] = "abd";
-	char *b = a;
 	printf("%d",str_len(a));
 	int len = str_len(a);
-	testAsm(b, a, len);
-	printf("%s", b);
+	testAsm(&a[1], a, len);
+	printf("%s\n", a);
+	//printf("%c%c%c\n", a[7], a[8], a[9]);
 }
