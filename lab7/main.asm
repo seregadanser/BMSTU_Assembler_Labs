@@ -79,8 +79,8 @@ Code SEGMENT PARA PUBLIC 'CODE'
         mov ax,351ch
         int 21h
 
-        cmp byte ptr es:is_init, 32h
-        je exit_out
+        ;cmp byte ptr es:is_init, 32h
+        ;je exit_out
 
         mov word ptr old_int_handler, bx
         mov word ptr old_int_handler + 2, es
@@ -89,31 +89,31 @@ Code SEGMENT PARA PUBLIC 'CODE'
         mov dx,OFFSET Input
         int 21H
 
-        mov byte ptr is_init, 32h
+        ;mov byte ptr is_init, 32h
         
         mov ax,3100h   ; завершиться и остаться резидентным
         mov dx,OFFSET init
 
         int 21H
 
-    exit_out:
-        mov dl, 31h
-        mov ah, 02h
-        int 21h
+    ;exit_out:
+    ;    mov dl, 31h
+    ;    mov ah, 02h
+    ;    int 21h
 
-        mov al, 0F3h
-        out 60h, al
+    ;    mov al, 0F3h
+    ;    out 60h, al
 
-        mov al, 0
-        out 60h, al
+    ;    mov al, 0
+    ;    out 60h, al
 
-        mov dx, word ptr es:old_int_handler
-        mov ds, word ptr es:old_int_handler+2
-        mov ax, 251ch
-        int 21h
+    ;    mov dx, word ptr es:old_int_handler
+    ;    mov ds, word ptr es:old_int_handler+2
+    ;    mov ax, 251ch
+    ;    int 21h
 
-        mov ax, 4c00h
-        int 21h
+    ;    mov ax, 4c00h
+    ;    int 21h
 
 Code ENDS
 
