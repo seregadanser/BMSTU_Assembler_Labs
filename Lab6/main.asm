@@ -1,9 +1,11 @@
 EXTRN input_number : near
 EXTRN print_new_line : near
-EXTRN str_to_16num : near
+EXTRN str_to_2num : near
+EXTRN output_hex : near
 
 PUBLIC buff
 PUBLIC hexi
+PUBLIC dou
 
 
 SSTK SEGMENT PARA STACK 'STACK'
@@ -13,14 +15,15 @@ SSTK ENDS
 Main_Seg SEGMENT PARA PUBLIC 'DATA'
         buff db 6, 0, 6 dup('0')
         hexi dw 1 dup(0)
+        dou db 16 dup(0)
 Main_Seg ENDS
 
 FirsSeg SEGMENT PARA 'DATA'
     message db "Press 1 to input"
     db 13, 10
-    db "Press 2 to convert in 16"
+    db "Press 2 to out in 16"
     db 13, 10
-    db "Press 3 to convert in 2" 
+    db "Press 3 to out in 2" 
     db 13, 10
     db "Press 4 to exit" 
     db 13, 10
@@ -39,8 +42,8 @@ Code SEGMENT PARA PUBLIC 'CODE'
 
         mov bx, offset adress
         mov [bx+0], input_number
-        mov [bx+2], str_to_16num
-        mov [bx+4], input_number
+        mov [bx+2], output_hex
+        mov [bx+4], str_to_2num
         mov [bx+6], exit
 
     menu:

@@ -4,6 +4,7 @@
 *.brk
 *.com
 examples
+*.json
 .vs
 Debug
 *.vcxproj
