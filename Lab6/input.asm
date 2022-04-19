@@ -1,9 +1,10 @@
 PUBLIC input_number 
 PUBLIC print_new_line
 
+
 EXTRN buff: byte
 EXTRN str_to_16num: near
-
+EXTRN str_to_2num: near
 
 
 
@@ -34,6 +35,8 @@ input_number PROC near
 	int 21h
 
     mov cx, 0h
+
+    call str_to_16num
 
     pop ds
 	ret 
