@@ -1,7 +1,10 @@
 ﻿#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <iostream>
+
+#define ITERATIONS 1000000
 
 float scalar_mlt(float a[], float b[], size_t size)
 {
@@ -62,6 +65,17 @@ int main()
 {
     float a[5] = { 1.0, 2.0, 3.0, 4.0, 5.0 };
     float b[5] = { 1.0, 2.0, 3.0, 4.0 , 5.0 };
+    time_t start = clock();
+    for (int i = 0; i < ITERATIONS; i++)
+        scalar_mlt_asm(a, a, 5);
+    time_t stop = clock();
+    printf("res asm - %f\n", (double)(stop - start) / CLOCKS_PER_SEC);
+    start = clock();
+    for (int i = 0; i < ITERATIONS; i++)
+        scalar_mlt(a, a, 5);
+    stop = clock();
+    printf("res - %f\n", (double)(stop - start) / CLOCKS_PER_SEC);
+
     float res_asm = scalar_mlt_asm(a, a, 5);
     float res = scalar_mlt(a, a, 5);
     printf("res asm - %f\n", res_asm);
