@@ -14,7 +14,7 @@ int str_len(const char* str)
 		mov esi, edi
 		xor eax, eax
 		mov ecx, 0ffffffffh
-		repne scasb
+		scasb
 		sub edi, esi
 		dec edi
 		mov len, edi
