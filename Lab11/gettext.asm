@@ -63,6 +63,7 @@ GetTextDialog proc dgltxt:DWORD,grptxt:DWORD
             6, \                            ; number of controls
             50,50,162,170, \                ; x y co-ordinates
             4096                            ; memory buffer size
+    ;Элементы управления количество должно совпадать с 63 строкой;
     DlgGroup  " Enter firstnum ",8,4,140,31,300
     DlgEdit   ES_LEFT or WS_BORDER or WS_TABSTOP,17,16,121,11,301
 
@@ -80,7 +81,7 @@ GetTextDialog endp
 
 dlgproc proc hWin:DWORD,uMsg:DWORD,wParam:DWORD,lParam:DWORD
 
-
+;Локальные переменные на стеке;
     LOCAL tlen  :DWORD
     LOCAL num1  :DWORD
     LOCAL num2  :DWORD
@@ -104,8 +105,9 @@ dlgproc proc hWin:DWORD,uMsg:DWORD,wParam:DWORD,lParam:DWORD
 
       case WM_COMMAND
         switch wParam
-          case IDOK
-               mov tlen, rv(GetWindowTextLength,rv(GetDlgItem,hWin,301))
+          case IDOK;IDOK - команда кнопки;
+          ;ВВод 1 числа;
+               mov tlen, rv(GetWindowTextLength,rv(GetDlgItem,hWin,301));301 - команда 1 textbox;
             .if tlen == 0
               invoke SetFocus,rv(GetDlgItem,hWin,301)
               ret
@@ -113,8 +115,8 @@ dlgproc proc hWin:DWORD,uMsg:DWORD,wParam:DWORD,lParam:DWORD
             add tlen, 1
             mov num1, alloc(tlen)
             fn GetWindowText,rv(GetDlgItem,hWin,301),num1,tlen
-
-               mov tlen, rv(GetWindowTextLength,rv(GetDlgItem,hWin,303))
+;ВВод 2 числа;
+               mov tlen, rv(GetWindowTextLength,rv(GetDlgItem,hWin,303));303 - команда 2 textbox;
             .if tlen == 0
               invoke SetFocus,rv(GetDlgItem,hWin,303)
               ret
@@ -122,13 +124,13 @@ dlgproc proc hWin:DWORD,uMsg:DWORD,wParam:DWORD,lParam:DWORD
             add tlen, 1
             mov num2, alloc(tlen)
             fn GetWindowText,rv(GetDlgItem,hWin,303),num2,tlen
-
+;Перевод в число из строки;
             invoke atol, num1        
             mov num1,eax
 
             invoke atol, num2 
             mov num2,eax
-
+;Начало вычислений;
             mov eax, num1
             mov edx, num2
             add eax, edx
