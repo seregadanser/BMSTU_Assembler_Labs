@@ -65,6 +65,7 @@ int main()
 {
     float a[5] = { 1.0, 2.0, 3.0, 4.0, 5.0 };
     float b[5] = { 1.0, 2.0, 3.0, 4.0 , 5.0 };
+
     time_t start = clock();
     for (int i = 0; i < ITERATIONS; i++)
         scalar_mlt_asm(a, a, 5);
